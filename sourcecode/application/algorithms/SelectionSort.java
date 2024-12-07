@@ -8,6 +8,7 @@ public class SelectionSort extends SortingAlgorithm {
 		super(initialArray);
 		sortName = "MergeSort";
 	}
+	
 	public void sort(int[] array) {
 		
 	};
