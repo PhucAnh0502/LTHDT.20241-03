@@ -8,6 +8,8 @@ public class ShellSort extends SortingAlgorithm {
 		super(initialArray);
 		sortName = "MergeSort";
 	}
+
+
 	public void sort(int[] array) {
 		
 	};
