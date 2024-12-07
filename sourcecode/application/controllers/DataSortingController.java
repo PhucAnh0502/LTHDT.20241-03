@@ -6,14 +6,28 @@ import application.algorithms.SelectionSort;
 import application.algorithms.MergeSort;
 import application.algorithms.SortingAlgorithm;
 
-public class DataSortingController implements Visualize {
+import javax.swing.*;
+import java.util.List;
 
+public class DataSortingController extends JPanel {
+	private MainScreenController mainController;
+	private List<String> data;
+	private MergeSort mergeSort;
+	private SelectionSort selectionSort;
 	private ShellSort shellSort;
 
-	private SelectionSort selectionSort;
+	public DataSortingController(MainScreenController mainController, SelectionSort selectionSort) {
+		this.mainController = mainController;
+		this.selectionSort = selectionSort;
+	}
 
-	private MergeSort mergeSort;
+	public DataSortingController(MainScreenController mainController, MergeSort mergeSort) {
+		this.mainController = mainController;
+		this.mergeSort = mergeSort;
+	}
 
-	private SortingAlgorithm sortingAlgorithm;
-
+	public DataSortingController(MainScreenController mainController, ShellSort shellSort) {
+		this.mainController = mainController;
+		this.shellSort = shellSort;
+	}
 }
