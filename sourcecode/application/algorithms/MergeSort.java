@@ -10,7 +10,8 @@ public class MergeSort extends SortingAlgorithm {
 		sortName = "MergeSort";
 		this.auxArray = new int[initialArray.length];
 	}
-	// Merge sort's thing
+
+    // Merge sort's thing
 	private void mergeSort(int[] array, int left, int right) { 
 		if (left < right) { 
 			int mid = (left + right) / 2;   	// init the middle index of the array

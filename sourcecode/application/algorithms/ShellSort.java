@@ -25,6 +25,8 @@ public class ShellSort extends SortingAlgorithm {
 		}
 		
 	}
+
+
 	public void sort(int[] array) {
 		shellSort(array);
 	};
