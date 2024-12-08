@@ -3,11 +3,11 @@ package application.algorithms;
 public class ShellSort extends SortingAlgorithm {
 	// Additional attribute:
 	private int[] array;
+	private int temp;
 	// Public Constructor
 	public ShellSort(int[] initialArray){
 		super(initialArray);
 		sortName = "ShellSort";
-		this.array = new int[initialArray.length];
 	}
 	private void shellSort(int[] a)
 	{
@@ -16,7 +16,7 @@ public class ShellSort extends SortingAlgorithm {
 		{
 			for(int i=gap;i<n;i++) 
 			{
-				int temp = a[i];
+				temp = a[i];
 				int j;
 				for(j=i;j>=gap&&a[j-gap]>temp;j-=gap)
 					a[j]=a[j-gap];
@@ -30,6 +30,10 @@ public class ShellSort extends SortingAlgorithm {
 	public void sort(int[] array) {
 		shellSort(array);
 	};
+	public int getTemp()
+	{
+		return temp;
+	}
 	
 	
 }
