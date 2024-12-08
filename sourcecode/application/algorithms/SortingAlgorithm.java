@@ -27,7 +27,12 @@ public abstract class SortingAlgorithm {
 	public int[] getSortedArray() { 
 		return sortedArray; 
 	}
-	
+
+	//public setters
+	public void setInitialArray(int[] initialArray) {
+		this.initialArray = initialArray;
+	}
+
 	// Utility functions
 	protected void swap(int a, int b) {
 		int temp = array[a];
@@ -70,4 +75,8 @@ public abstract class SortingAlgorithm {
 //	}
 	// meant to be inherited and overridden 
 	protected abstract void sort(int[] array);
+
+	public void sort() {
+
+	}
 }

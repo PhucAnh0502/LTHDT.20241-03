@@ -9,25 +9,20 @@ import application.algorithms.SortingAlgorithm;
 import javax.swing.*;
 import java.util.List;
 
-public class DataSortingController extends JPanel {
-	private MainScreenController mainController;
-	private List<String> data;
-	private MergeSort mergeSort;
-	private SelectionSort selectionSort;
-	private ShellSort shellSort;
+public class DataSortingController {
+	private SortingAlgorithm selectedAlgorithm;
+	private Visualize visualize;
 
-	public DataSortingController(MainScreenController mainController, SelectionSort selectionSort) {
-		this.mainController = mainController;
-		this.selectionSort = selectionSort;
+	public void setData(int[] data) {
+		selectedAlgorithm.setInitialArray(data);
 	}
 
-	public DataSortingController(MainScreenController mainController, MergeSort mergeSort) {
-		this.mainController = mainController;
-		this.mergeSort = mergeSort;
+	public void setVisualize(Visualize visualize) {
+		this.visualize = visualize;
 	}
 
-	public DataSortingController(MainScreenController mainController, ShellSort shellSort) {
-		this.mainController = mainController;
-		this.shellSort = shellSort;
+	public void sortAndVisualize() {
+		selectedAlgorithm.sort();
 	}
 }
+
