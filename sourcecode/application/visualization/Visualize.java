@@ -1,5 +1,6 @@
 package application.visualization;
 
 public interface Visualize {
-    void display(Object data);
+    void displayArray(int[] data);
+    void swapElements(int[] array, int i, int j);
 }
