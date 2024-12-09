@@ -27,12 +27,6 @@ public abstract class SortingAlgorithm {
 	public int[] getSortedArray() { 
 		return sortedArray; 
 	}
-
-	//public setters
-	public void setInitialArray(int[] initialArray) {
-		this.initialArray = initialArray;
-	}
-
 	// Utility functions
 	protected void swap(int a, int b) {
 		int temp = array[a];
@@ -54,10 +48,10 @@ public abstract class SortingAlgorithm {
 		return true;
 	}
 	public void measureSortTime() {
-	    int[] tempArray = copyArray(initialArray); // Copy the initial array
+	    array = initialArray; // Copy the initial array
 	    long startTime = System.nanoTime();
-	    sort(tempArray);
-	    sortedArray = copyArray(tempArray);
+	    sort();
+	    sortedArray = copyArray(array);
 	    long endTime = System.nanoTime();
 	    sortTime = (endTime - startTime) / 1e6f; // Convert to milliseconds
 	    sorted = isSorted();	
@@ -74,9 +68,5 @@ public abstract class SortingAlgorithm {
 //		}
 //	}
 	// meant to be inherited and overridden 
-	protected abstract void sort(int[] array);
-
-	public void sort() {
-
-	}
+	protected abstract void sort();
 }
