@@ -1,3 +1,5 @@
+package application.algorithms;
+
 public class SelectionSort extends SortingAlgorihm {
     public SelectionSort(int[] initialArray){
         super(initialArray);
