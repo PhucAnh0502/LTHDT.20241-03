@@ -2,7 +2,6 @@ package application.algorithms;
 
 public class ShellSort extends SortingAlgorithm {
 	// Additional attribute:
-	private int[] array;
 	private int temp;
 	// Public Constructor
 	public ShellSort(int[] initialArray){
@@ -25,9 +24,7 @@ public class ShellSort extends SortingAlgorithm {
 		}
 		
 	}
-
-
-	public void sort(int[] array) {
+	public void sort() {
 		shellSort(array);
 	};
 	public int getTemp()
