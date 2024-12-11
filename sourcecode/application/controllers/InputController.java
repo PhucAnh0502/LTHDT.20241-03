@@ -1,5 +1,11 @@
 package application.controllers;
-
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 public class InputController {
 	   private void generateRandomArray() {
         Random rand = new Random();
