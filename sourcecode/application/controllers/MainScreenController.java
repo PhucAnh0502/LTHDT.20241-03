@@ -1,69 +1,36 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
 
-public class MainScreenController {
+public class MainScreenController extends JFrame {
 
-    // Selection Sort
-    public static void selectionSort(int[] array) {
-      
-        }
-    }
+    // Buttons for interaction
+    private JButton randomArrayButton;
+    private JButton inputArrayButton;
+    private JTextField arrayInput;
+    private JTextArea outputArea;
+    private int[] array;
 
-    // Merge Sort
-    public static void mergeSort(int[] array, int left, int right) {
-        
+    public MainScreenController() {
+        // Frame setup
+        setTitle("Sorting Algorithms Demonstration");
+        setSize(400, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new FlowLayout());
 
+        // Initialize components
+        randomArrayButton = new JButton("Generate Random Array");
+        inputArrayButton = new JButton("Input Array");
+        arrayInput = new JTextField(20);
+        outputArea = new JTextArea(10, 30);
+        outputArea.setEditable(false);
 
-    }
-
-    private static void merge(int[] array, int left, int mid, int right) {
-       
-    }
-
-    // Shell Sort
-    public static void shellSort(int[] array) {
-
-	    
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter the size of the array:");
-        int n = scanner.nextInt();
-
-        int[] array = new int[n];
-        System.out.println("Enter the elements of the array:");
-        for (int i = 0; i < n; i++) {
-            array[i] = scanner.nextInt();
-        }
-
-        System.out.println("Choose a sorting algorithm:");
-        System.out.println("1. Selection Sort");
-        System.out.println("2. Merge Sort");
-        System.out.println("3. Shell Sort");
-
-        int choice = scanner.nextInt();
-
-        switch (choice) {
-            case 1:
-                selectionSort(array);
-                System.out.println("Array sorted using Selection Sort:");
-                break;
-            case 2:
-                mergeSort(array, 0, array.length - 1);
-                System.out.println("Array sorted using Merge Sort:");
-                break;
-            case 3:
-                shellSort(array);
-                System.out.println("Array sorted using Shell Sort:");
-                break;
-            default:
-                System.out.println("Invalid choice.");
-                return;
-        }
-
-        System.out.println(Arrays.toString(array));
-        scanner.close();
-    }
-}
+        // Add components to the frame
+        add(randomArrayButton);
+        add(inputArrayButton);
+        add(arrayInput);
+        add(new JScrollPane(outputArea));
