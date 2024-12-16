@@ -1,69 +1,62 @@
+package application.controllers;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainScreenController {
+    private JFrame frame;
+    private JButton selectionSortBtn, mergeSortBtn, shellSortBtn, helpBtn, quitBtn;
+    private JPanel mainPanel;
 
-    // Selection Sort
-    public static void selectionSort(int[] array) {
-      
-        }
+    public MainScreenController() {
+        frame = new JFrame("Sorting Application");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400,300);
+
+        mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(5,1));
+
+        //Button
+        selectionSortBtn = new JButton("Selection Sort");
+        mergeSortBtn = new JButton("Merge Sort");
+        shellSortBtn = new JButton("Shell Sort");
+        helpBtn = new JButton("Help");
+        quitBtn = new JButton("Quit");
+
+        //Add Button
+        mainPanel.add(selectionSortBtn);
+        mainPanel.add(mergeSortBtn);
+        mainPanel.add(shellSortBtn);
+        mainPanel.add(helpBtn);
+        mainPanel.add(quitBtn);
+
+        frame.add(mainPanel);
+        frame.setVisible(true);
+
+        //handle events
+        selectionSortBtn.addActionListener(e -> handleSeclectionSort());
+        mergeSortBtn.addActionListener(e -> handleMergeSort());
+        shellSortBtn.addActionListener(e -> handleShellSort());
+        helpBtn.addActionListener(e -> showHelp());
+        quitBtn.addActionListener(e -> confirmQuit());
     }
 
-    // Merge Sort
-    public static void mergeSort(int[] array, int left, int right) {
-        
+    private void handleSeclectionSort(){}
 
+    private void handleMergeSort(){}
 
+    private void handleShellSort(){}
+
+    private void showHelp(){
+        JOptionPane.showMessageDialog(frame, "This application is using to demonstrate sorting algorithm (Selection Sort, Merge Sort, Shell Sort)");
     }
 
-    private static void merge(int[] array, int left, int mid, int right) {
-       
-    }
-
-    // Shell Sort
-    public static void shellSort(int[] array) {
-
-	    
-            }
+    private void confirmQuit(){
+        int choice = JOptionPane.showConfirmDialog(frame, "Are you sure you want to exit?", "Confirmation", JOptionPane.YES_NO_OPTION);
+        if (choice == JOptionPane.YES_OPTION) {
+            System.exit(0);
         }
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Enter the size of the array:");
-        int n = scanner.nextInt();
-
-        int[] array = new int[n];
-        System.out.println("Enter the elements of the array:");
-        for (int i = 0; i < n; i++) {
-            array[i] = scanner.nextInt();
-        }
-
-        System.out.println("Choose a sorting algorithm:");
-        System.out.println("1. Selection Sort");
-        System.out.println("2. Merge Sort");
-        System.out.println("3. Shell Sort");
-
-        int choice = scanner.nextInt();
-
-        switch (choice) {
-            case 1:
-                selectionSort(array);
-                System.out.println("Array sorted using Selection Sort:");
-                break;
-            case 2:
-                mergeSort(array, 0, array.length - 1);
-                System.out.println("Array sorted using Merge Sort:");
-                break;
-            case 3:
-                shellSort(array);
-                System.out.println("Array sorted using Shell Sort:");
-                break;
-            default:
-                System.out.println("Invalid choice.");
-                return;
-        }
-
-        System.out.println(Arrays.toString(array));
-        scanner.close();
     }
 }
