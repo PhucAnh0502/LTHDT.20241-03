@@ -1,35 +1,59 @@
 package application.controllers;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+
 public class InputController {
-	   private void generateRandomArray() {
-        Random rand = new Random();
-        int n = rand.nextInt(10) + 5; // Array size between 5 and 14
-        array = new int[n];
-        for (int i = 0; i < n; i++) {
-            array[i] = rand.nextInt(100); // Random numbers between 0 and 99
-        }
-        arrayInput.setText(Arrays.toString(array));
-        outputArea.setText("Generated Random Array: \n" + Arrays.toString(array));
+    private JFrame frame;
+    private JButton randomArrayButton, inputArrayButton, backButton;
+    private int[] arrayInput;
+
+    public InputController() {
+        frame = new JFrame("Array Input");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 150);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(2, 1));
+
+        //Button
+        randomArrayButton = new JButton("Create Randomly");
+        inputArrayButton = new JButton("Input Array");
+        backButton = new JButton("Back");
+
+        //Add Button
+        panel.add(randomArrayButton);
+        panel.add(inputArrayButton);
+        panel.add(backButton);
+
+        frame.add(panel);
+        frame.setVisible(true);
+
+        //handle event
+        randomArrayButton.addActionListener(e -> generateRandomArray());
+        inputArrayButton.addActionListener(e -> inputArray());
+        backButton.addActionListener(e -> handleBack());
     }
 
     // Method to input array manually
     private void inputArray() {
-        try {
-            String input = arrayInput.getText();
-            String[] inputValues = input.replaceAll("[\\[\\] ]", "").split(",");
-            array = new int[inputValues.length];
-            for (int i = 0; i < inputValues.length; i++) {
-                array[i] = Integer.parseInt(inputValues[i].trim());
-            }
-            outputArea.setText("Input Array: \n" + Arrays.toString(array));
-        } catch (NumberFormatException e) {
-            outputArea.setText("Invalid input format. Please use a comma-separated list.");
+        String input = JOptionPane.showInputDialog("Enter your array, separated by commas: ");
+        String[] numbers = input.split(",");
+        arrayInput = new int[numbers.length];
+        for(int i = 0; i < numbers.length; i++){
+            arrayInput[i] = Integer.parseInt(numbers[i].trim());
         }
+    }
+
+    private void generateRandomArray() {
+        String input = JOptionPane.showInputDialog("Enter size of array: ");
+        int size = Integer.parseInt(input);
+        for (int i = 0; i < size; i++) {
+            arrayInput[i] = (int) (Math.random() * 100);
+        }
+    }
+
+    private void handleBack(){
+        frame.setVisible(false);
+        MainScreenController mainFrame = new MainScreenController();
     }
 }
