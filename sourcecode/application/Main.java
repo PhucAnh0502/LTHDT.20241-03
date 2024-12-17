@@ -1,8 +1,14 @@
 package application;
 
+import application.controllers.MainScreenController;
+
 public class Main {
+    public static MainScreenController mainMenu;
     public static void main(String[] args) {
-        System.out.println("Welcome to the project!");
-      
+        showMainMenu();
+    }
+
+    public static void showMainMenu(){
+        mainMenu = new MainScreenController();
     }
  }

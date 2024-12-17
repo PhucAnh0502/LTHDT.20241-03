@@ -9,6 +9,7 @@ public class MainScreenController {
     private JFrame frame;
     private JButton selectionSortBtn, mergeSortBtn, shellSortBtn, helpBtn, quitBtn;
     private JPanel mainPanel;
+    private InputController inputController;
 
     public MainScreenController() {
         frame = new JFrame("Sorting Application");
@@ -16,7 +17,7 @@ public class MainScreenController {
         frame.setSize(400,300);
 
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayout(5,1));
+        mainPanel.setLayout(new GridLayout(1,5));
 
         //Button
         selectionSortBtn = new JButton("Selection Sort");
@@ -43,11 +44,17 @@ public class MainScreenController {
         quitBtn.addActionListener(e -> confirmQuit());
     }
 
-    private void handleSeclectionSort(){}
+    private void handleSeclectionSort(){
+        inputController = new InputController();
+    }
 
-    private void handleMergeSort(){}
+    private void handleMergeSort(){
+        inputController = new InputController();
+    }
 
-    private void handleShellSort(){}
+    private void handleShellSort(){
+        inputController = new InputController();
+    }
 
     private void showHelp(){
         JOptionPane.showMessageDialog(frame, "This application is using to demonstrate sorting algorithm (Selection Sort, Merge Sort, Shell Sort)");

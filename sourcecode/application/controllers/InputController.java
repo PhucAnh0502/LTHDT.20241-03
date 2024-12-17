@@ -57,7 +57,6 @@ public class InputController {
 
     private void handleBack(){
         frame.setVisible(false);
-        MainScreenController mainFrame = new MainScreenController();
     }
 
     public int[] getArrayInput() {
