@@ -1,5 +1,7 @@
 package application.algorithm;
 
+import application.panel.SortingPanel;
+
 public class MergeSort extends SortingAlgorithm {
 	@Override
 	public void sort(SortingPanel panel) {

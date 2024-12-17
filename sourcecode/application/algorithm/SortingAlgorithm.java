@@ -1,5 +1,7 @@
 package application.algorithm;
 
+import application.panel.SortingPanel;
+
 public abstract class SortingAlgorithm {
 	protected int[] array;
 
