@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class InputController {
     private JFrame frame;
-    private JButton randomArrayButton, inputArrayButton, backButton;
+    private JButton randomArrayButton, inputArrayButton, backButton, startSortingButton;
     private int[] arrayInput;
 
     public InputController() {
@@ -19,11 +19,13 @@ public class InputController {
         randomArrayButton = new JButton("Create Randomly");
         inputArrayButton = new JButton("Input Array");
         backButton = new JButton("Back");
+        startSortingButton = new JButton("Start");
 
         //Add Button
         panel.add(randomArrayButton);
         panel.add(inputArrayButton);
         panel.add(backButton);
+        panel.add(startSortingButton);
 
         frame.add(panel);
         frame.setVisible(true);
@@ -32,6 +34,7 @@ public class InputController {
         randomArrayButton.addActionListener(e -> generateRandomArray());
         inputArrayButton.addActionListener(e -> inputArray());
         backButton.addActionListener(e -> handleBack());
+        startSortingButton.addActionListener(e -> startSort());
     }
 
     // Method to input array manually
@@ -55,5 +58,13 @@ public class InputController {
     private void handleBack(){
         frame.setVisible(false);
         MainScreenController mainFrame = new MainScreenController();
+    }
+
+    public int[] getArrayInput() {
+        return arrayInput;
+    }
+
+    public void startSort(){
+
     }
 }
