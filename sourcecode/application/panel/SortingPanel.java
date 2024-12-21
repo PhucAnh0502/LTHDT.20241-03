@@ -7,7 +7,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class SortingPanel extends JPanel {
-    private int[] array;
+    private int delayTime = 1;
+	private int[] array = null;
     private SortingAlgorithm sortAlgorithm;
     private MainScreenPanel parentFrame;
     private boolean isSorting = false;
@@ -59,7 +60,7 @@ public class SortingPanel extends JPanel {
 
         // Add small delay to visualize swap
         try {
-            Thread.sleep(200);
+            Thread.sleep(delayTime);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -89,15 +90,24 @@ public class SortingPanel extends JPanel {
         JButton randomArrayBtn = createStyledButton("Random Array", new Color(76, 175, 80));
         randomArrayBtn.addActionListener(e -> {
             generateRandomArray();
-            updateStatus("Random array created", true);
+            if (array != null) {
+                updateStatus("Custom array created", true);
+            } else {
+                updateStatus("Custom array creation failed", false);
+            }
         });
 
         // Input Array Button
         JButton inputArrayBtn = createStyledButton("Input Array", new Color(33, 150, 243));
         inputArrayBtn.addActionListener(e -> {
             inputCustomArray();
-            updateStatus("Custom array created", true);
+            if (array != null) {
+                updateStatus("Custom array created", true);
+            } else {
+                updateStatus("Custom array creation failed", false);
+            }
         });
+
 
         // Start Sort Button
         JButton startSortBtn = createStyledButton("Start Sorting", new Color(255, 152, 0));
@@ -154,15 +164,23 @@ public class SortingPanel extends JPanel {
     private void generateRandomArray() {
         Random rand = new Random();
         String input = JOptionPane.showInputDialog("Enter size of array: ");
-        int size = Integer.parseInt(input);
-        array = new int[size];
-        for (int i = 0; i < size; i++) {
-            array[i] = rand.nextInt(100) + 1;  // 1-100 values
+        try {
+            int size = Integer.parseInt(input);
+            if (size <= 0) {
+                throw new NumberFormatException();
+            }
+            array = new int[size];
+            for (int i = 0; i < size; i++) {
+                array[i] = rand.nextInt(100) + 1;  // 1-100 values
+            }
+            sortAlgorithm.setArray(array);
+            resetSortingStats();
+            repaint();
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please enter a positive integer.");
         }
-        sortAlgorithm.setArray(array);
-        resetSortingStats();
-        repaint();
     }
+
 
     private void inputCustomArray() {
         String input = JOptionPane.showInputDialog("Enter array elements (comma-separated):");
@@ -178,7 +196,8 @@ public class SortingPanel extends JPanel {
                 repaint();
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Invalid input! Please enter numbers.");
-                updateStatus("Invalid array input", false);
+                array = null;
+                updateStatus("Invalid array input, try again!", false);
             }
         }
     }
@@ -280,7 +299,7 @@ public class SortingPanel extends JPanel {
 
         // Add small delay to visualize comparison
         try {
-            Thread.sleep(200);
+            Thread.sleep(delayTime);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
