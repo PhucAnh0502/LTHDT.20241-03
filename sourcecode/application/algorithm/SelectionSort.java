@@ -27,5 +27,6 @@ public class SelectionSort extends SortingAlgorithm {
                 panel.setArray(array); // Update the array in the panel
             }
         }
+        panel.setArray(array);  // Finalize the array in the panel after sorting
     }
 }

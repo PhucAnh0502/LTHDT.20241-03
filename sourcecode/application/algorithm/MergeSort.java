@@ -3,68 +3,56 @@ package application.algorithm;
 import application.panel.SortingPanel;
 
 public class MergeSort extends SortingAlgorithm {
-    
+	// Additional attribute: Auxiliary array
+    private int[] auxArray;  // Auxiliary array for merges
+
     @Override
     public void sort(SortingPanel panel) {
-        array = panel.getArray();  // Get the array from the panel
+        int[] array = panel.getArray();  // Get the array from the panel
         if (array == null || array.length <= 1) return;
-        mergeSort(panel, 0, array.length - 1);
+
+        auxArray = new int[array.length];  // Initialize the auxiliary array
+        mergeSort(panel, array, 0, array.length - 1);
+        panel.setArray(array);  // Finalize the array in the panel after sorting
     }
 
-    private void mergeSort(SortingPanel panel, int left, int right) {
+    private void mergeSort(SortingPanel panel, int[] array, int left, int right) {
         if (left < right) {
             int mid = left + (right - left) / 2;
-            mergeSort(panel, left, mid);
-            mergeSort(panel, mid + 1, right);
-            merge(panel, left, mid, right);
+            mergeSort(panel, array, left, mid);
+            mergeSort(panel, array, mid + 1, right);
+            merge(panel, array, left, mid, right);
         }
     }
 
-    private void merge(SortingPanel panel, int left, int mid, int right) {
-        int[] temp = new int[right - left + 1];
-        int i = left, j = mid + 1, k = 0;
-        int[] mergeIndices = new int[temp.length];
-        int mergeIndex = 0;
+    private void merge(SortingPanel panel, int[] array, int left, int mid, int right) {
+        System.arraycopy(array, left, auxArray, left, right - left + 1);  // Copy to auxiliary array
+        int i = left, j = mid + 1, k = left;
 
         while (i <= mid && j <= right) {
             panel.setCompareIndices(i, j);
 
-            if (array[i] <= array[j]) {
-                temp[k++] = array[i++];
+            if (auxArray[i] <= auxArray[j]) {
+                array[k++] = auxArray[i++];
             } else {
-                temp[k++] = array[j++];
+                array[k++] = auxArray[j++];
             }
-
-            mergeIndices[mergeIndex++] = k;
-
-            // Add a small delay to visualize the merge step
-            panel.setMergeIndices(mergeIndices);
-            panel.repaint();
+            panel.setMergeIndices(array, left, k - left);  // Pass the merged array to the panel
         }
 
-        // Copy remaining elements from left subarray (if there are any)
+        // Copy remaining elements from the left subarray (if there are any)
         while (i <= mid) {
-            temp[k++] = array[i++];
-            mergeIndices[mergeIndex++] = k;
-            panel.setMergeIndices(mergeIndices);
-            panel.repaint();
+            array[k++] = auxArray[i++];
+            panel.setMergeIndices(array, left, k - left);  // Pass the merged array to the panel
         }
 
-        // Copy remaining elements from right subarray (if there are any)
+        // Copy remaining elements from the right subarray (if there are any)
         while (j <= right) {
-            temp[k++] = array[j++];
-            mergeIndices[mergeIndex++] = k;
-            panel.setMergeIndices(mergeIndices);
-            panel.repaint();
+            array[k++] = auxArray[j++];
+            panel.setMergeIndices(array, left, k - left);  // Pass the merged array to the panel
         }
 
-        // Copy all elements from the temporary array back to the original array
-        System.arraycopy(temp, 0, array, left, temp.length);
-
-        // Update the array in the panel
+        // Update the array in the panel after merging
         panel.setArray(array);
-
-        // Repaint the panel after merging
-        panel.repaint();
     }
 }
