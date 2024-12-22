@@ -4,11 +4,10 @@ import application.algorithm.SortingAlgorithm;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 
 public class SortingPanel extends JPanel {
     private int delayTime = 100;
-	private int[] array = null;
+    private int[] array = null;
     private SortingAlgorithm sortAlgorithm;
     private MainScreenPanel parentFrame;
     private boolean isSorting = false;
@@ -30,10 +29,12 @@ public class SortingPanel extends JPanel {
     // UI Components
     private JLabel statusLabel;
     private JLabel statsLabel;
+    private InputHandling inputHandling;
 
     public SortingPanel(MainScreenPanel parent, SortingAlgorithm algorithm) {
         this.parentFrame = parent;
         this.sortAlgorithm = algorithm;
+        this.inputHandling = new InputHandling(algorithm);
 
         setLayout(new BorderLayout());
         setBackground(new Color(240, 240, 240));
@@ -46,51 +47,15 @@ public class SortingPanel extends JPanel {
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.SOUTH);
     }
-    
+
     public void setArray(int[] array) {
         this.array = array;
         repaint();
     }
-	public int[] getArray() {
-		return array;
-	}
 
-    public void setSwapIndices(int index1, int index2) {
-        swapIndex1 = index1;
-        swapIndex2 = index2;
-        swapCount++;
-        // Perform the swap
-        if (array != null && index1 >= 0 && index2 >= 0 && index1 < array.length && index2 < array.length) {
-            int temp = array[index1];
-            array[index1] = array[index2];
-            array[index2] = temp;
-        }
-        repaint();
-        // Add small delay to visualize swap
-        try {
-            Thread.sleep(delayTime);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
+    public int[] getArray() {
+        return array;
     }
-    
-    public void setMergeIndices(int[] tempArray, int start, int length) {
-        // Merge the temporary array into the main array
-        System.arraycopy(tempArray, start, array, start, length);
-        // Update the merge indices for visualization
-        mergeIndices = new int[length];
-        System.arraycopy(tempArray, start, mergeIndices, 0, length);
-
-        // Repaint to visualize the merge step
-        repaint();
-        try {
-            Thread.sleep(delayTime);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
-
-
 
     private JPanel createStatusPanel() {
         JPanel statusPanel = new JPanel(new GridLayout(2, 1));
@@ -115,25 +80,28 @@ public class SortingPanel extends JPanel {
         // Random Array Button
         JButton randomArrayBtn = createStyledButton("Random Array", new Color(76, 175, 80));
         randomArrayBtn.addActionListener(e -> {
-            generateRandomArray();
-            if (array != null) {
+            inputHandling.generateRandomArray();
+            int[] generatedArray = inputHandling.getArray(); // Lấy mảng đã tạo
+            if (generatedArray != null) {
+                setArray(generatedArray); // Cập nhật mảng trong SortingPanel
                 updateStatus("Custom array created", true);
             } else {
                 updateStatus("Custom array creation failed", false);
             }
         });
 
-        // Input Array Button
+// Input Array Button
         JButton inputArrayBtn = createStyledButton("Input Array", new Color(33, 150, 243));
         inputArrayBtn.addActionListener(e -> {
-            inputCustomArray();
-            if (array != null) {
+            inputHandling.inputCustomArray();
+            int[] customArray = inputHandling.getArray(); // Lấy mảng đã nhập
+            if (customArray != null) {
+                setArray(customArray); // Cập nhật mảng trong SortingPanel
                 updateStatus("Custom array created", true);
             } else {
                 updateStatus("Custom array creation failed", false);
             }
         });
-
 
         // Start Sort Button
         JButton startSortBtn = createStyledButton("Start Sorting", new Color(255, 152, 0));
@@ -187,48 +155,8 @@ public class SortingPanel extends JPanel {
         return button;
     }
 
-    private void generateRandomArray() {
-        Random rand = new Random();
-        String input = JOptionPane.showInputDialog("Enter size of array: ");
-        try {
-            int size = Integer.parseInt(input);
-            if (size <= 0) {
-                throw new NumberFormatException();
-            }
-            array = new int[size];
-            for (int i = 0; i < size; i++) {
-                array[i] = rand.nextInt(100) + 1;  // 1-100 values
-            }
-            sortAlgorithm.setArray(array);
-            resetSortingStats();
-            repaint();
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Please enter a positive integer.");
-        }
-    }
-
-
-    private void inputCustomArray() {
-        String input = JOptionPane.showInputDialog("Enter array elements (comma-separated):");
-        if (input != null && !input.trim().isEmpty()) {
-            try {
-                String[] strArray = input.split(",");
-                array = new int[strArray.length];
-                for (int i = 0; i < strArray.length; i++) {
-                    array[i] = Integer.parseInt(strArray[i].trim());
-                }
-                sortAlgorithm.setArray(array);
-                resetSortingStats();
-                repaint();
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Invalid input! Please enter numbers.");
-                array = null;
-                updateStatus("Invalid array input, try again!", false);
-            }
-        }
-    }
-
     private void startSorting() {
+        array = inputHandling.getArray();
         if (array == null) {
             JOptionPane.showMessageDialog(this, "Create an array first!");
             updateStatus("Please create an array", false);
@@ -327,8 +255,7 @@ public class SortingPanel extends JPanel {
                 barColor = Color.RED;  // Highlight swapped elements
             } else if (i == currentCompareIndex1 || i == currentCompareIndex2) {
                 barColor = Color.YELLOW;  // Highlight compared elements
-            } 
-            else if (i <= currentScanIndex) {
+            } else if (i <= currentScanIndex) {
                 barColor = Color.GREEN;  // Highlight scanned elements
             } else {
                 barColor = new Color(70, 130, 180);  // Normal bar color
@@ -342,10 +269,10 @@ public class SortingPanel extends JPanel {
 
             // Draw value on top of bar
             g.setColor(Color.BLACK);
-			String value = String.valueOf(array[i]);
-			FontMetrics fm = g.getFontMetrics();
-			x += (barWidth - 5 - fm.stringWidth(value)) / 2;
-			g.drawString(value, x ,y );
+            String value = String.valueOf(array[i]);
+            FontMetrics fm = g.getFontMetrics();
+            x += (barWidth - 5 - fm.stringWidth(value)) / 2;
+            g.drawString(value, x, y);
         }
     }
 
@@ -366,6 +293,41 @@ public class SortingPanel extends JPanel {
         repaint();
 
         // Add small delay to visualize comparison
+        try {
+            Thread.sleep(delayTime);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void setSwapIndices(int index1, int index2) {
+        swapIndex1 = index1;
+        swapIndex2 = index2;
+        swapCount++;
+        // Perform the swap
+        if (array != null && index1 >= 0 && index2 >= 0 && index1 < array.length && index2 < array.length) {
+            int temp = array[index1];
+            array[index1] = array[index2];
+            array[index2] = temp;
+        }
+        repaint();
+        // Add small delay to visualize swap
+        try {
+            Thread.sleep(delayTime);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void setMergeIndices(int[] tempArray, int start, int length) {
+        // Merge the temporary array into the main array
+        System.arraycopy(tempArray, start, array, start, length);
+        // Update the merge indices for visualization
+        mergeIndices = new int[length];
+        System.arraycopy(tempArray, start, mergeIndices, 0, length);
+
+        // Repaint to visualize the merge step
+        repaint();
         try {
             Thread.sleep(delayTime);
         } catch (InterruptedException e) {
