@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class SortingPanel extends JPanel {
-    private int delayTime = 1;
+    private int delayTime = 2;
 	private int[] array = null;
     private SortingAlgorithm sortAlgorithm;
     private MainScreenPanel parentFrame;
@@ -18,6 +18,8 @@ public class SortingPanel extends JPanel {
     private int currentCompareIndex2 = -1;
     private int swapIndex1 = -1;
     private int swapIndex2 = -1;
+    private int currentScanIndex = -1;
+    private int[] mergeIndices = null;
 
     // Sorting statistics
     private long startTime;
@@ -44,6 +46,14 @@ public class SortingPanel extends JPanel {
         JPanel controlPanel = createControlPanel();
         add(controlPanel, BorderLayout.SOUTH);
     }
+    
+    public void setArray(int[] array) {
+        this.array = array;
+        repaint();
+    }
+	public int[] getArray() {
+		return array;
+	}
 
     public void setSwapIndices(int index1, int index2) {
         swapIndex1 = index1;
@@ -59,6 +69,15 @@ public class SortingPanel extends JPanel {
         }
 
         // Add small delay to visualize swap
+        try {
+            Thread.sleep(delayTime);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+    public void setMergeIndices(int[] indices) {
+        this.mergeIndices = indices;
+        repaint();
         try {
             Thread.sleep(delayTime);
         } catch (InterruptedException e) {
@@ -217,7 +236,8 @@ public class SortingPanel extends JPanel {
         new Thread(() -> {
             isSorting = true;
             startTime = System.nanoTime();
-
+            currentScanIndex = -1;
+            
             sortAlgorithm.sort(this);
 
             endTime = System.nanoTime();
@@ -225,9 +245,40 @@ public class SortingPanel extends JPanel {
                 isSorting = false;
                 currentCompareIndex1 = -1;
                 currentCompareIndex2 = -1;
-                updateFinalStats();
+                swapIndex1 = -1;
+                swapIndex2 = -1;
+                mergeIndices = null;
+                repaint();                
+                boolean isSorted = true;
+                for (int i = 0; i < array.length - 1; i++) {
+                    if (array[i] > array[i + 1]) {
+                        isSorted = false;
+                        break;
+                    }
+                }
+                
+                if (isSorted) {
+                    visualizeFinalScan();
+                    updateFinalStats();
+                } else {
+                    updateStatus("Sorting failed. The array is not sorted.", false);
+                }
                 repaint();
             });
+        }).start();
+    }
+    
+    private void visualizeFinalScan() {
+        new Thread(() -> {
+            for (int i = 0; i < array.length; i++) {
+            	currentScanIndex = i;
+                try {
+                    Thread.sleep(delayTime);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                repaint();
+            }
         }).start();
     }
 
@@ -262,24 +313,42 @@ public class SortingPanel extends JPanel {
             // Determine color based on visualization state
             Color barColor;
             if (i == currentCompareIndex1 || i == currentCompareIndex2) {
-                barColor = Color.RED;  // Highlight compared elements
+                barColor = Color.YELLOW;  // Highlight compared elements
             } else if (i == swapIndex1 || i == swapIndex2) {
-                barColor = Color.GREEN;  // Highlight swapped elements (can adjust timing)
+                barColor = Color.RED;  // Highlight swapped elements
+            } else if (mergeIndices != null && contains(mergeIndices, i)) {
+                barColor = Color.RED;  // Highlight merged elements
+            } else if (i <= currentScanIndex) {
+                barColor = Color.GREEN;  // Highlight scanned elements
             } else {
                 barColor = new Color(70, 130, 180);  // Normal bar color
             }
 
             // Draw bar
             int x = (i + 1) * barWidth;
+            
             int y = getHeight() - barHeight - 100;  // Adjust for bottom margin
             g.setColor(barColor);
             g.fillRect(x, y, barWidth - 5, barHeight);
 
             // Draw value on top of bar
             g.setColor(Color.BLACK);
-            g.drawString(String.valueOf(array[i]), x, y - 5);
+			String value = String.valueOf(array[i]);
+			FontMetrics fm = g.getFontMetrics();
+			x += (barWidth - 5 - fm.stringWidth(value)) / 2;
+			g.drawString(value, x ,y );
         }
     }
+
+    private boolean contains(int[] arr, int key) {
+        for (int i : arr) {
+            if (i == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private int findMaxValue() {
         if (array == null || array.length == 0) return 1;
