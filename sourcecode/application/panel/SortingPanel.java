@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.Random;
 
 public class SortingPanel extends JPanel {
-    private int delayTime = 2;
+    private int delayTime = 100;
 	private int[] array = null;
     private SortingAlgorithm sortAlgorithm;
     private MainScreenPanel parentFrame;
@@ -59,15 +59,13 @@ public class SortingPanel extends JPanel {
         swapIndex1 = index1;
         swapIndex2 = index2;
         swapCount++;
-        repaint();
-
         // Perform the swap
         if (array != null && index1 >= 0 && index2 >= 0 && index1 < array.length && index2 < array.length) {
             int temp = array[index1];
             array[index1] = array[index2];
             array[index2] = temp;
         }
-
+        repaint();
         // Add small delay to visualize swap
         try {
             Thread.sleep(delayTime);
@@ -75,8 +73,15 @@ public class SortingPanel extends JPanel {
             Thread.currentThread().interrupt();
         }
     }
-    public void setMergeIndices(int[] indices) {
-        this.mergeIndices = indices;
+    
+    public void setMergeIndices(int[] tempArray, int start, int length) {
+        // Merge the temporary array into the main array
+        System.arraycopy(tempArray, start, array, start, length);
+        // Update the merge indices for visualization
+        mergeIndices = new int[length];
+        System.arraycopy(tempArray, start, mergeIndices, 0, length);
+
+        // Repaint to visualize the merge step
         repaint();
         try {
             Thread.sleep(delayTime);
@@ -84,6 +89,8 @@ public class SortingPanel extends JPanel {
             Thread.currentThread().interrupt();
         }
     }
+
+
 
     private JPanel createStatusPanel() {
         JPanel statusPanel = new JPanel(new GridLayout(2, 1));
@@ -237,7 +244,7 @@ public class SortingPanel extends JPanel {
             isSorting = true;
             startTime = System.nanoTime();
             currentScanIndex = -1;
-            
+
             sortAlgorithm.sort(this);
 
             endTime = System.nanoTime();
@@ -248,7 +255,8 @@ public class SortingPanel extends JPanel {
                 swapIndex1 = -1;
                 swapIndex2 = -1;
                 mergeIndices = null;
-                repaint();                
+                repaint();
+
                 boolean isSorted = true;
                 for (int i = 0; i < array.length - 1; i++) {
                     if (array[i] > array[i + 1]) {
@@ -256,22 +264,26 @@ public class SortingPanel extends JPanel {
                         break;
                     }
                 }
-                
+
                 if (isSorted) {
-                    visualizeFinalScan();
-                    updateFinalStats();
+                    visualizeFinalScan(() -> {
+                        updateFinalStats();
+                        repaint();
+                    });
                 } else {
                     updateStatus("Sorting failed. The array is not sorted.", false);
+                    updateFinalStats();
+                    repaint();
                 }
-                repaint();
             });
         }).start();
     }
-    
-    private void visualizeFinalScan() {
+
+    private void visualizeFinalScan(Runnable callback) {
         new Thread(() -> {
             for (int i = 0; i < array.length; i++) {
-            	currentScanIndex = i;
+                currentScanIndex = i;
+                updateStatus("Checking the number at the index [" + i + "] please wait...", false);
                 try {
                     Thread.sleep(delayTime);
                 } catch (InterruptedException e) {
@@ -279,17 +291,16 @@ public class SortingPanel extends JPanel {
                 }
                 repaint();
             }
+            callback.run();
         }).start();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
         if (array == null) {
             return;
         }
-
         // Calculate dimensions
         int panelWidth = getWidth();
         int panelHeight = getHeight() - 150;  // Leave space for controls
@@ -312,13 +323,12 @@ public class SortingPanel extends JPanel {
 
             // Determine color based on visualization state
             Color barColor;
-            if (i == currentCompareIndex1 || i == currentCompareIndex2) {
-                barColor = Color.YELLOW;  // Highlight compared elements
-            } else if (i == swapIndex1 || i == swapIndex2) {
+            if (i == swapIndex1 || i == swapIndex2) {
                 barColor = Color.RED;  // Highlight swapped elements
-            } else if (mergeIndices != null && contains(mergeIndices, i)) {
-                barColor = Color.RED;  // Highlight merged elements
-            } else if (i <= currentScanIndex) {
+            } else if (i == currentCompareIndex1 || i == currentCompareIndex2) {
+                barColor = Color.YELLOW;  // Highlight compared elements
+            } 
+            else if (i <= currentScanIndex) {
                 barColor = Color.GREEN;  // Highlight scanned elements
             } else {
                 barColor = new Color(70, 130, 180);  // Normal bar color
@@ -326,7 +336,6 @@ public class SortingPanel extends JPanel {
 
             // Draw bar
             int x = (i + 1) * barWidth;
-            
             int y = getHeight() - barHeight - 100;  // Adjust for bottom margin
             g.setColor(barColor);
             g.fillRect(x, y, barWidth - 5, barHeight);
@@ -339,16 +348,6 @@ public class SortingPanel extends JPanel {
 			g.drawString(value, x ,y );
         }
     }
-
-    private boolean contains(int[] arr, int key) {
-        for (int i : arr) {
-            if (i == key) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     private int findMaxValue() {
         if (array == null || array.length == 0) return 1;
