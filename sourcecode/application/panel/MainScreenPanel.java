@@ -17,14 +17,11 @@ public class MainScreenPanel extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Initialize card layout
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
 
-        // Create main menu panel
         mainPanel.add(createMainMenuPanel(), "MAIN_MENU");
 
-        // Create sorting panels
         currentSortingPanel = new SortingPanel(this, new SelectionSort());
         mainPanel.add(currentSortingPanel, "SELECTION_SORT");
 
@@ -43,7 +40,6 @@ public class MainScreenPanel extends JFrame {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                // Background gradient
                 Graphics2D g2d = (Graphics2D) g;
                 GradientPaint gradient = new GradientPaint(
                         0, 0, new Color(135, 206, 235),
@@ -56,22 +52,22 @@ public class MainScreenPanel extends JFrame {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.gridwidth = 2;
+        gbc.weightx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        // Title
-        JLabel titleLabel = new JLabel("Sorting Algorithm Visualization");
+        JLabel titleLabel = new JLabel("Sorting Algorithm Visualization", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.WHITE);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
         menuPanel.add(titleLabel, gbc);
 
-        // Sorting algorithm buttons
         String[] sortTypes = {"Selection Sort", "Merge Sort", "Shell Sort"};
         gbc.gridwidth = 1;
         for (int i = 0; i < sortTypes.length; i++) {
-            JButton sortButton = new JButton(sortTypes[i]);
-            sortButton.setPreferredSize(new Dimension(200, 50));
+            JButton sortButton = createRoundedButton(sortTypes[i], new Dimension(200, 50));
             final String sortType = sortTypes[i];
             sortButton.addActionListener(e -> {
                 switch (sortType) {
@@ -88,40 +84,20 @@ public class MainScreenPanel extends JFrame {
             });
             gbc.gridx = 0;
             gbc.gridy = i + 1;
+            gbc.gridwidth = 2;
             menuPanel.add(sortButton, gbc);
         }
 
-        // Help button
-        JButton helpButton = new JButton("Help") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(new Color(70, 130, 180));
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-                g2d.setColor(Color.WHITE);
-                g2d.drawString(getText(), getWidth()/2 - g.getFontMetrics().stringWidth(getText())/2, getHeight()/2 + 5);
-            }
-        };
+        JButton helpButton = createRoundedButton("Help", new Dimension(200, 50));
+        helpButton.setBackground(new Color(30, 144, 255));
+        helpButton.setForeground(Color.WHITE);
         helpButton.addActionListener(e -> showHelpDialog());
-        helpButton.setContentAreaFilled(false);
-        helpButton.setBorderPainted(false);
-        gbc.gridx = 0;
         gbc.gridy = sortTypes.length + 1;
         menuPanel.add(helpButton, gbc);
 
-        // Quit button
-        JButton quitButton = new JButton("Quit") {
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g;
-                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2d.setColor(new Color(178, 34, 34));
-                g2d.fillRoundRect(0, 0, getWidth(), getHeight(), 10, 10);
-                g2d.setColor(Color.WHITE);
-                g2d.drawString(getText(), getWidth()/2 - g.getFontMetrics().stringWidth(getText())/2, getHeight()/2 + 5);
-            }
-        };
+        JButton quitButton = createRoundedButton("Quit", new Dimension(200, 50));
+        quitButton.setBackground(new Color(178, 34, 34));
+        quitButton.setForeground(Color.WHITE);
         quitButton.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(this,
                     "Are you sure you want to quit?",
@@ -131,13 +107,36 @@ public class MainScreenPanel extends JFrame {
                 System.exit(0);
             }
         });
-        quitButton.setContentAreaFilled(false);
-        quitButton.setBorderPainted(false);
-        gbc.gridx = 0;
         gbc.gridy = sortTypes.length + 2;
         menuPanel.add(quitButton, gbc);
 
         return menuPanel;
+    }
+
+    private JButton createRoundedButton(String text, Dimension size) {
+        JButton button = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+                g2.setColor(getForeground());
+                g2.dispose();
+                g2.setFont(new Font("Arial", Font.BOLD, 12));
+                super.paintComponent(g);
+            }
+
+            @Override
+            protected void paintBorder(Graphics g) {
+                g.setColor(getForeground());
+                ((Graphics2D) g).drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 20, 20);
+            }
+        };
+        button.setContentAreaFilled(false);
+        button.setFocusPainted(false);
+        button.setPreferredSize(size);
+        return button;
     }
 
     private void showHelpDialog() {
