@@ -85,12 +85,13 @@ public class SortingPanel extends JPanel {
             if (generatedArray != null) {
                 setArray(generatedArray); // Cập nhật mảng trong SortingPanel
                 updateStatus("Custom array created", true);
+                delayTime = 1000 / Math.max(array.length, 1);
             } else {
                 updateStatus("Custom array creation failed", false);
             }
         });
 
-// Input Array Button
+        // Input Array Button
         JButton inputArrayBtn = createStyledButton("Input Array", new Color(33, 150, 243));
         inputArrayBtn.addActionListener(e -> {
             inputHandling.inputCustomArray();
@@ -98,6 +99,7 @@ public class SortingPanel extends JPanel {
             if (customArray != null) {
                 setArray(customArray); // Cập nhật mảng trong SortingPanel
                 updateStatus("Custom array created", true);
+                delayTime = 1000 / Math.max(array.length, 1);
             } else {
                 updateStatus("Custom array creation failed", false);
             }
