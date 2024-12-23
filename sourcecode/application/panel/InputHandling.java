@@ -42,13 +42,18 @@ public class InputHandling {
                 String[] strArray = input.split(",");
                 array = new int[strArray.length];
                 for (int i = 0; i < strArray.length; i++) {
-                    array[i] = Integer.parseInt(strArray[i].trim());
+                    int value = Integer.parseInt(strArray[i].trim());
+                    if (value < 0) {
+                        throw new NumberFormatException("Negative numbers are not allowed.");
+                    }
+                    array[i] = value;
                 }
                 sortAlgorithm.setArray(array);
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Invalid input! Please enter numbers.");
+                JOptionPane.showMessageDialog(null, "Invalid input! Please enter non-negative integers only.");
                 array = null;
             }
         }
     }
+
 }

@@ -150,7 +150,8 @@ public class MainScreenPanel extends JFrame {
                         "- Select a sorting algorithm\n" +
                         "- Click 'Random Array' or 'Input Array'\n" +
                         "- Press 'Start Sorting' to begin\n" +
-                        "- Watch the sorting process step by step",
+                        "- Watch the sorting process step by step\n\n" +
+                        "*Please note that this app can only sort positive intergers\n" ,
                 "Help",
                 JOptionPane.INFORMATION_MESSAGE
         );
