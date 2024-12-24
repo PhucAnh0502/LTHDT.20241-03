@@ -8,9 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainScreenPanel extends JFrame {
-    private CardLayout cardLayout;
+	private static final long serialVersionUID = 1L;
+	private CardLayout cardLayout;
     private JPanel mainPanel;
-    private SortingPanel currentSortingPanel;
 
     public MainScreenPanel() {
         setTitle("Sorting Algorithm Visualization");
@@ -22,8 +22,8 @@ public class MainScreenPanel extends JFrame {
 
         mainPanel.add(createMainMenuPanel(), "MAIN_MENU");
 
-        currentSortingPanel = new SortingPanel(this, new SelectionSort());
-        mainPanel.add(currentSortingPanel, "SELECTION_SORT");
+        SortingPanel selctionSortPanel = new SortingPanel(this, new SelectionSort());
+        mainPanel.add(selctionSortPanel, "SELECTION_SORT");
 
         SortingPanel mergeSortPanel = new SortingPanel(this, new MergeSort());
         mainPanel.add(mergeSortPanel, "MERGE_SORT");
@@ -37,7 +37,9 @@ public class MainScreenPanel extends JFrame {
 
     private JPanel createMainMenuPanel() {
         JPanel menuPanel = new JPanel(new GridBagLayout()) {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2d = (Graphics2D) g;
@@ -115,7 +117,9 @@ public class MainScreenPanel extends JFrame {
 
     private JButton createRoundedButton(String text, Dimension size) {
         JButton button = new JButton(text) {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
