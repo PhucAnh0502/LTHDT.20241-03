@@ -6,7 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SortingPanel extends JPanel {
-    private int delayTime = 100;
+	private static final long serialVersionUID = 1L;
+	private int delayTime = 100;
     private int[] array = null;
     private SortingAlgorithm sortAlgorithm;
     private MainScreenPanel parentFrame;
@@ -128,7 +129,9 @@ public class SortingPanel extends JPanel {
 
     private JButton createStyledButton(String text, Color bgColor) {
         JButton button = new JButton(text) {
-            @Override
+			private static final long serialVersionUID = 1L;
+
+			@Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
